@@ -1,0 +1,265 @@
+{
+  "phase": {
+    "number": 1,
+    "name": "Business Analysis",
+    "status": "complete",
+    "next_phase": "System Architecture",
+    "gate": "Do not proceed to Phase 2 until Phase 1 is accepted."
+  },
+  "product": {
+    "name": "Parametric Agricultural Insurance Platform",
+    "initial_product_slice": "Latur Crop Stress Parametric Cover",
+    "goal": "Automate agricultural insurance eligibility and payout simulation using measurable weather, satellite, and crop-stage parameters.",
+    "initial_data_mode": "demo_data",
+    "future_data_mode": "live_api_adapters"
+  },
+  "source_inputs": [
+    "Parametric_Insurance_GIS_RS_POC_Case_Study.pdf",
+    "PROJECT_STRUCTURE.md",
+    "parametric_insurance_arch_analysis.md",
+    "schema.sql",
+    "instructions.txt",
+    "drive-download-20260625T074451Z-3-001.zip"
+  ],
+  "roles": [
+    {
+      "key": "farmer",
+      "label": "Farmer",
+      "primary_jobs": [
+        "register",
+        "complete_kyc",
+        "manage_farm_details",
+        "view_policy",
+        "view_crop_health",
+        "receive_alerts",
+        "track_payout"
+      ]
+    },
+    {
+      "key": "insurance_company",
+      "label": "Insurance Company",
+      "primary_jobs": [
+        "create_policy",
+        "approve_policy",
+        "price_policy",
+        "monitor_risk",
+        "approve_payout"
+      ]
+    },
+    {
+      "key": "field_officer",
+      "label": "Field Officer",
+      "primary_jobs": [
+        "verify_farm",
+        "upload_documents",
+        "inspect_flagged_case",
+        "resolve_basis_risk"
+      ]
+    },
+    {
+      "key": "admin",
+      "label": "Admin",
+      "primary_jobs": [
+        "manage_users",
+        "manage_roles",
+        "manage_crops",
+        "manage_triggers",
+        "manage_data_sources",
+        "manage_settings"
+      ]
+    },
+    {
+      "key": "government",
+      "label": "Government",
+      "primary_jobs": [
+        "monitor_scheme_performance",
+        "review_district_risk",
+        "review_payout_status",
+        "review_compliance_evidence"
+      ]
+    },
+    {
+      "key": "reinsurance_company",
+      "label": "Reinsurance Company",
+      "primary_jobs": [
+        "monitor_portfolio_exposure",
+        "review_risk_concentration",
+        "review_loss_ratio",
+        "review_payout_distribution"
+      ]
+    },
+    {
+      "key": "auditor",
+      "label": "Auditor",
+      "primary_jobs": [
+        "review_audit_log",
+        "review_approval_actions",
+        "review_rule_versions",
+        "review_data_provenance"
+      ]
+    }
+  ],
+  "poc_data_summary": {
+    "crop_master_records": 34,
+    "ndvi_plot_records": 96,
+    "ndvi_observation_dates": 36,
+    "ndvi_date_range": {
+      "start": "2025-06-04",
+      "end": "2026-03-26"
+    },
+    "missing_ndvi_cells_pct": 2.14,
+    "final_prediction_records": 96,
+    "detected_crop_cycles": 70,
+    "known_crop_average_confidence_pct": 90.83,
+    "unknown_fallow_or_insufficient_signal_plots": 29,
+    "cropping_intensity": {
+      "single": 64,
+      "double": 3,
+      "no_clear_cycle": 29
+    }
+  },
+  "trigger_model": [
+    {
+      "key": "trigger_a",
+      "label": "Establishment Failure",
+      "default_role": "supporting_flag",
+      "rule": "If NDVI rise from cycle start is less than 0.15 within 30-45 days, flag establishment risk.",
+      "manual_review_conditions": [
+        "low_confidence",
+        "unknown_crop",
+        "no_clear_cycle",
+        "missing_ndvi"
+      ]
+    },
+    {
+      "key": "trigger_b",
+      "label": "Mid-Season Vegetation Stress",
+      "default_role": "primary_trigger",
+      "formula": "((expected_ndvi - observed_ndvi) / expected_ndvi) * 100",
+      "expected_ndvi_source_initial": "crop_or_cycle_median_from_available_plots",
+      "expected_ndvi_source_future": "rolling_3_to_5_year_historical_baseline"
+    },
+    {
+      "key": "trigger_c",
+      "label": "Sudden Decline After Peak",
+      "default_role": "supporting_flag",
+      "rule": "If NDVI drops more than 0.25 within 15-30 days before expected harvest, flag stress for review.",
+      "manual_review_conditions": [
+        "calendar_mismatch",
+        "possible_harvest",
+        "low_confidence",
+        "extreme_stress"
+      ]
+    }
+  ],
+  "payout_ladder": [
+    {
+      "stress_band": "no_stress",
+      "condition": "ndvi_anomaly_pct < 10",
+      "payout_pct": 0,
+      "review_required": false
+    },
+    {
+      "stress_band": "mild",
+      "condition": "10 <= ndvi_anomaly_pct < 20",
+      "payout_pct": 25,
+      "review_required": false
+    },
+    {
+      "stress_band": "moderate",
+      "condition": "20 <= ndvi_anomaly_pct < 35",
+      "payout_pct": 50,
+      "review_required": false
+    },
+    {
+      "stress_band": "severe",
+      "condition": "ndvi_anomaly_pct >= 35",
+      "payout_pct": 75,
+      "review_required": "recommended_for_high_value_policies"
+    },
+    {
+      "stress_band": "extreme",
+      "condition": "ndvi_extremely_low_or_no_clear_crop_cycle",
+      "payout_pct": 100,
+      "review_required": true
+    }
+  ],
+  "basis_risk_flags": [
+    "unknown_fallow_or_no_clear_cycle",
+    "crop_confidence_below_threshold",
+    "extreme_stress_band",
+    "missing_or_interpolated_ndvi_in_trigger_window",
+    "rainfall_or_soil_moisture_contradicts_ndvi",
+    "missing_or_unverified_geometry",
+    "crop_calendar_mismatch",
+    "duplicate_or_suspicious_policy_plot"
+  ],
+  "recommended_defaults": {
+    "auto_approval_confidence_threshold_pct": 85,
+    "extreme_stress_policy": "manual_review_required",
+    "sum_insured_granularity": "per_policy_crop",
+    "double_crop_handling": "separate_crop_cycle_and_policy_crop_eligibility",
+    "geometry_policy": "real_geometry_preferred_sample_geometry_must_be_labeled",
+    "weather_authority": "imd_primary_chirps_era5_nasa_power_fallback",
+    "farmer_notification_languages": [
+      "mr",
+      "hi",
+      "en"
+    ]
+  },
+  "modules_mvp": [
+    "authentication",
+    "rbac",
+    "farmer_registration",
+    "kyc",
+    "farm_plot_management",
+    "policy_management",
+    "premium_calculator",
+    "weather_monitoring",
+    "satellite_ndvi_monitoring",
+    "crop_monitoring",
+    "trigger_engine",
+    "basis_risk_review",
+    "payout_approval",
+    "claims_payout_history",
+    "gis_dashboard",
+    "analytics_dashboard",
+    "reports",
+    "notifications",
+    "audit_logs",
+    "admin_settings"
+  ],
+  "api_groups_future": [
+    "auth",
+    "users_roles",
+    "farmers_kyc",
+    "farms_plots_gis",
+    "policies_policy_crops",
+    "premium_calculator",
+    "weather_observations",
+    "satellite_ndvi_observations",
+    "crop_calendar_crop_cycles",
+    "triggers_trigger_rules",
+    "basis_risk_flags",
+    "payout_approvals",
+    "payout_records",
+    "claims",
+    "notifications",
+    "reports",
+    "dashboard_aggregates",
+    "audit_logs",
+    "settings_data_sources"
+  ],
+  "acceptance_criteria": [
+    "business_problem_and_product_scope_documented",
+    "source_materials_assessed",
+    "user_roles_and_core_jobs_documented",
+    "trigger_logic_and_payout_ladder_defined",
+    "basis_risk_controls_defined",
+    "functional_and_non_functional_requirements_documented",
+    "architecture_boundaries_named_without_implementing_later_phases",
+    "database_api_ui_expectations_captured_for_future_phases",
+    "workflow_and_approval_model_documented",
+    "structured_requirements_artifact_exists"
+  ]
+}

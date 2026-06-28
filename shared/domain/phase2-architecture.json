@@ -1,0 +1,314 @@
+{
+  "phase": {
+    "number": 2,
+    "name": "System Architecture",
+    "status": "complete",
+    "next_phase": "Database Schema",
+    "gate": "Do not implement database migrations, backend APIs, frontend screens, GIS modules, ML modules, tests, deployment, or production optimization until their phase is active."
+  },
+  "architecture_style": {
+    "primary": "modular_monolith_with_async_workers",
+    "evolution_path": "extract_services_only_when_scaling_or_ownership_requires_it",
+    "rationale": [
+      "keeps policy_trigger_approval_payout_consistency_simple",
+      "preserves_domain_boundaries_for_later_service_extraction",
+      "supports_demo_and_live_adapter_swap_without_business_logic_rewrite"
+    ]
+  },
+  "technology_stack": {
+    "frontend": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Shadcn UI",
+      "Framer Motion",
+      "React Router",
+      "React Query",
+      "Leaflet",
+      "Recharts",
+      "Chart.js"
+    ],
+    "backend": [
+      "Python",
+      "FastAPI",
+      "SQLAlchemy",
+      "Alembic",
+      "Pydantic"
+    ],
+    "database": [
+      "PostgreSQL",
+      "PostGIS",
+      "TimescaleDB"
+    ],
+    "async_and_cache": [
+      "Redis",
+      "Celery",
+      "Celery Beat"
+    ],
+    "storage": [
+      "Local file storage",
+      "S3-compatible object storage later"
+    ],
+    "containerization": [
+      "Docker",
+      "Docker Compose local",
+      "Kubernetes later"
+    ]
+  },
+  "containers": [
+    {
+      "key": "frontend_web_app",
+      "label": "React TypeScript Web App",
+      "responsibilities": [
+        "role_aware_ui",
+        "dashboards",
+        "gis_visualization",
+        "policy_workflows",
+        "approval_queues",
+        "farmer_portal"
+      ]
+    },
+    {
+      "key": "fastapi_backend",
+      "label": "FastAPI Backend",
+      "responsibilities": [
+        "api_transport",
+        "authentication",
+        "authorization",
+        "domain_services",
+        "validation",
+        "audit_emission",
+        "worker_dispatch"
+      ]
+    },
+    {
+      "key": "celery_workers",
+      "label": "Celery Workers",
+      "responsibilities": [
+        "observation_ingestion",
+        "trigger_runs",
+        "reports",
+        "notifications",
+        "ml_prediction_jobs"
+      ]
+    },
+    {
+      "key": "postgres_postgis_timescaledb",
+      "label": "PostgreSQL + PostGIS + TimescaleDB",
+      "responsibilities": [
+        "system_of_record",
+        "spatial_queries",
+        "time_series_observations",
+        "audit_storage"
+      ]
+    },
+    {
+      "key": "redis",
+      "label": "Redis",
+      "responsibilities": [
+        "cache",
+        "celery_broker",
+        "rate_limit_support",
+        "short_lived_task_state"
+      ]
+    },
+    {
+      "key": "object_storage",
+      "label": "Local Storage / S3 Later",
+      "responsibilities": [
+        "documents",
+        "reports",
+        "certificates",
+        "rasters",
+        "exports"
+      ]
+    }
+  ],
+  "bounded_contexts": [
+    "identity_and_access",
+    "farmer_and_kyc",
+    "farm_and_gis",
+    "policy_and_premium",
+    "observation_ingestion",
+    "crop_intelligence",
+    "trigger_engine",
+    "basis_risk",
+    "approval_workflow",
+    "payout_and_payment",
+    "notification",
+    "reporting_and_analytics",
+    "audit_ledger",
+    "ml_registry"
+  ],
+  "api_groups": [
+    "auth",
+    "users_and_rbac",
+    "farmers_and_kyc",
+    "farms_and_gis",
+    "policies",
+    "premiums",
+    "observations",
+    "crop_intelligence",
+    "triggers",
+    "basis_risk",
+    "approvals",
+    "payouts",
+    "claims",
+    "reports",
+    "dashboards",
+    "notifications",
+    "audit",
+    "settings"
+  ],
+  "worker_queues": [
+    {
+      "key": "ingestion",
+      "jobs": [
+        "satellite_pull",
+        "weather_pull",
+        "csv_xlsx_import",
+        "quality_flagging"
+      ]
+    },
+    {
+      "key": "triggers",
+      "jobs": [
+        "trigger_a_evaluation",
+        "trigger_b_evaluation",
+        "trigger_c_evaluation",
+        "basis_risk_evaluation"
+      ]
+    },
+    {
+      "key": "reports",
+      "jobs": [
+        "csv_export",
+        "pdf_export",
+        "excel_export"
+      ]
+    },
+    {
+      "key": "notifications",
+      "jobs": [
+        "sms_delivery",
+        "email_delivery",
+        "webhook_delivery"
+      ]
+    },
+    {
+      "key": "ml",
+      "jobs": [
+        "crop_prediction_run",
+        "ndvi_baseline_generation",
+        "model_registry_update"
+      ]
+    }
+  ],
+  "data_architecture": {
+    "system_of_record": "postgresql",
+    "spatial_engine": "postgis",
+    "time_series_engine": "timescaledb",
+    "geometry_srid": 4326,
+    "immutability_required_for": [
+      "trigger_events",
+      "payout_records",
+      "audit_log"
+    ],
+    "sensitive_data_policy": "store_hashes_or_secure_references_never_raw_identity_or_bank_details"
+  },
+  "integration_adapters": {
+    "weather": [
+      "imd",
+      "chirps",
+      "era5",
+      "nasa_power",
+      "openweather",
+      "tomorrow_io"
+    ],
+    "satellite": [
+      "sentinel_hub",
+      "google_earth_engine",
+      "copernicus",
+      "usgs",
+      "isro_bhuvan"
+    ],
+    "payment": [
+      "razorpay",
+      "upi_neft_imps"
+    ],
+    "government": [
+      "pmfby",
+      "agristack",
+      "land_records",
+      "sdma",
+      "dao_approval"
+    ],
+    "notification": [
+      "sms",
+      "email",
+      "push",
+      "webhook"
+    ]
+  },
+  "security_controls": [
+    "jwt_access_tokens",
+    "refresh_token_rotation",
+    "password_hashing",
+    "route_level_rbac",
+    "service_level_permission_checks",
+    "pydantic_validation",
+    "audit_logging",
+    "rate_limiting",
+    "secure_headers",
+    "secrets_manager_ready"
+  ],
+  "observability": [
+    "structured_json_logs",
+    "request_correlation_ids",
+    "health_checks",
+    "ingestion_metrics",
+    "trigger_metrics",
+    "approval_backlog_metrics",
+    "payout_latency_metrics",
+    "notification_delivery_metrics",
+    "worker_task_status"
+  ],
+  "frontend_architecture": {
+    "shell": [
+      "sidebar",
+      "topbar",
+      "role_aware_navigation",
+      "notification_drawer",
+      "global_search"
+    ],
+    "page_groups": [
+      "public",
+      "auth",
+      "dashboard",
+      "gis",
+      "ndvi",
+      "policies",
+      "triggers",
+      "basis_risk",
+      "payouts",
+      "claims",
+      "analytics",
+      "admin",
+      "reports",
+      "settings"
+    ]
+  },
+  "acceptance_criteria": [
+    "architecture_style_and_container_model_documented",
+    "bounded_contexts_and_ownership_rules_documented",
+    "backend_frontend_data_worker_integration_security_observability_architecture_defined",
+    "folder_scaffold_created",
+    "database_expectations_deferred_to_phase_3",
+    "api_groups_defined_without_endpoint_implementation",
+    "ui_screen_architecture_defined_without_frontend_implementation",
+    "workflows_modeled",
+    "machine_readable_architecture_artifact_exists",
+    "diagram_source_files_exist"
+  ]
+}

@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant Scheduler
+    participant Ingestion
+    participant CropIntel as Crop Intelligence
+    participant Trigger as Trigger Engine
+    participant BasisRisk as Basis Risk
+    participant Approval
+    participant Payout
+    participant Notification
+    participant Audit
+
+    Scheduler->>Ingestion: Start observation ingestion
+    Ingestion->>CropIntel: Clean observations and quality flags
+    CropIntel->>Trigger: Crop stage and expected NDVI
+    Trigger->>Trigger: Evaluate Trigger A/B/C
+    Trigger->>Audit: Append trigger event decision
+    Trigger->>BasisRisk: Evaluate basis-risk rules
+    BasisRisk->>Approval: Route to auto approval or review
+    Approval->>Payout: Approve payout creation
+    Payout->>Audit: Append payout record state
+    Payout->>Notification: Queue farmer/internal notification
+    Notification->>Audit: Append delivery state

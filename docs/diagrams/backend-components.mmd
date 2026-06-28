@@ -1,0 +1,22 @@
+flowchart TB
+    API["API Routers"]
+    Core["Core: Config, Security, RBAC, Logging"]
+    Services["Domain Services"]
+    Repositories["Repositories"]
+    Workers["Workers"]
+    Adapters["Provider Adapters"]
+    DB[("PostgreSQL + PostGIS + TimescaleDB")]
+    Redis[("Redis")]
+    External["External Providers"]
+    Audit["Audit Ledger"]
+
+    API --> Core
+    API --> Services
+    Services --> Repositories
+    Services --> Audit
+    Repositories --> DB
+    Services --> Workers
+    Workers --> Repositories
+    Workers --> Adapters
+    Workers --> Redis
+    Adapters --> External

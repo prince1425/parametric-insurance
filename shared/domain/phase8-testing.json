@@ -1,0 +1,25 @@
+{
+  "phase": {
+    "number": 8,
+    "name": "Testing",
+    "status": "complete",
+    "next_phase": "Deployment"
+  },
+  "test_assets": [
+    "database/validation/phase8_smoke.sql",
+    "backend/tests/integration/test_api_smoke.py",
+    "backend/tests/unit/test_security.py",
+    "ml/tests/test_risk_scoring.py"
+  ],
+  "coverage": [
+    "database_smoke",
+    "backend_health",
+    "auth_login",
+    "dashboard_api",
+    "gis_geojson_api",
+    "ml_risk_scores_api",
+    "jwt_unit",
+    "risk_scoring_unit",
+    "frontend_production_build"
+  ]
+}

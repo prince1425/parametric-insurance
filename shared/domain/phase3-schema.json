@@ -1,0 +1,195 @@
+{
+  "phase": {
+    "number": 3,
+    "name": "Database Schema",
+    "status": "complete",
+    "next_phase": "Backend APIs",
+    "gate": "Do not implement backend APIs, frontend screens, GIS UI, ML modules, tests, deployment, or production optimization until their phase is active."
+  },
+  "database": {
+    "local_name": "agrishield",
+    "application_schema": "agri",
+    "engine": "PostgreSQL",
+    "spatial_extension": "PostGIS",
+    "timeseries_extension": "TimescaleDB optional",
+    "local_timescaledb_available": false,
+    "local_apply_status": "applied",
+    "local_apply_counts": {
+      "tables": 52,
+      "views": 5,
+      "helper_functions": 7,
+      "roles": 8,
+      "permissions": 24,
+      "data_sources": 16,
+      "crops": 8,
+      "trigger_rules": 3,
+      "system_settings": 5
+    }
+  },
+  "artifacts": {
+    "migrations": [
+      "database/migrations/0001_initial_schema.sql",
+      "database/migrations/0002_optional_timescaledb.sql"
+    ],
+    "seeds": [
+      "database/seeds/0001_reference_data.sql"
+    ],
+    "views": [
+      "database/views/0001_reporting_views.sql"
+    ],
+    "docs": [
+      "docs/phase-3-database-schema.md"
+    ]
+  },
+  "entity_groups": {
+    "identity_and_access": [
+      "roles",
+      "permissions",
+      "role_permissions",
+      "users",
+      "user_roles",
+      "refresh_tokens",
+      "api_clients"
+    ],
+    "reference_sources": [
+      "data_sources",
+      "file_objects"
+    ],
+    "geography": [
+      "states",
+      "districts",
+      "talukas",
+      "villages",
+      "admin_boundaries"
+    ],
+    "farmer_and_kyc": [
+      "farmers",
+      "farmer_kyc_documents"
+    ],
+    "farm_and_plot": [
+      "farms",
+      "plots"
+    ],
+    "crop_intelligence": [
+      "crops",
+      "crop_calendar",
+      "crop_growth_stages",
+      "ndvi_baselines",
+      "model_versions",
+      "prediction_runs",
+      "crop_cycles"
+    ],
+    "policy_and_premium": [
+      "policy_types",
+      "premium_rules",
+      "policies",
+      "policy_crops",
+      "premium_quotes"
+    ],
+    "observations": [
+      "observation_batches",
+      "satellite_observations",
+      "ndvi_observations",
+      "rvi_observations",
+      "rainfall_observations",
+      "temperature_observations",
+      "soil_moisture_observations",
+      "flood_observations"
+    ],
+    "trigger_and_basis_risk": [
+      "trigger_rules",
+      "trigger_events",
+      "basis_risk_flags"
+    ],
+    "approval_and_payout": [
+      "payout_approvals",
+      "payout_records",
+      "payout_payment_events"
+    ],
+    "claims_notifications_reports": [
+      "claims",
+      "notification_templates",
+      "notification_logs",
+      "report_exports"
+    ],
+    "platform": [
+      "system_settings",
+      "idempotency_keys",
+      "audit_log",
+      "schema_migrations"
+    ]
+  },
+  "reporting_views": [
+    "v_plot_trigger_summary",
+    "v_approval_queue",
+    "v_district_risk_summary",
+    "v_farmer_policy_summary",
+    "v_latest_ndvi_by_plot"
+  ],
+  "helper_functions": [
+    "set_updated_at",
+    "prevent_update_delete",
+    "compute_ndvi_anomaly",
+    "anomaly_to_stress_band",
+    "stress_band_to_payout_pct",
+    "calculate_payout_amount",
+    "generate_record_hash"
+  ],
+  "spatial_tables": [
+    "districts",
+    "talukas",
+    "villages",
+    "admin_boundaries",
+    "farms",
+    "plots",
+    "satellite_observations",
+    "flood_observations"
+  ],
+  "timeseries_tables": [
+    "satellite_observations",
+    "ndvi_observations",
+    "rvi_observations",
+    "rainfall_observations",
+    "temperature_observations",
+    "soil_moisture_observations",
+    "flood_observations"
+  ],
+  "seeded_reference_data": {
+    "roles": 8,
+    "permissions": 24,
+    "data_sources": 16,
+    "states": [
+      "Maharashtra"
+    ],
+    "districts": [
+      "Latur"
+    ],
+    "common_crops": [
+      "Cotton",
+      "Soybean",
+      "Paddy",
+      "Maize",
+      "Onion",
+      "Tur",
+      "Sorghum",
+      "Groundnut"
+    ],
+    "trigger_rules": [
+      "default_establishment_failure",
+      "default_mid_season_stress",
+      "default_sudden_decline"
+    ]
+  },
+  "acceptance_criteria": [
+    "normalized_postgresql_schema_exists",
+    "postgis_geometry_columns_and_indexes_exist",
+    "timeseries_observation_tables_exist",
+    "optional_timescaledb_migration_exists_and_is_safe_when_unavailable",
+    "rbac_tables_exist",
+    "farmer_kyc_farm_plot_policy_crop_observation_trigger_payout_notification_settings_audit_tables_exist",
+    "reference_seeds_exist",
+    "dashboard_reporting_views_exist",
+    "helper_functions_exist",
+    "machine_readable_schema_catalog_exists"
+  ]
+}

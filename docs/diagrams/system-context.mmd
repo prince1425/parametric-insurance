@@ -1,0 +1,33 @@
+flowchart LR
+    Farmer["Farmer"]
+    FieldOfficer["Field Officer"]
+    Insurer["Insurance Company"]
+    Admin["Admin"]
+    Government["Government"]
+    Reinsurer["Reinsurance Company"]
+    Auditor["Auditor"]
+    Web["React TypeScript Web App"]
+    Api["FastAPI Backend"]
+    Worker["Celery Workers"]
+    Db[("PostgreSQL + PostGIS + TimescaleDB")]
+    Redis[("Redis")]
+    Storage[("Local Storage / S3 Later")]
+    External["Weather, Satellite, Payment, Government, Notification APIs"]
+
+    Farmer --> Web
+    FieldOfficer --> Web
+    Insurer --> Web
+    Admin --> Web
+    Government --> Web
+    Reinsurer --> Web
+    Auditor --> Web
+    Web --> Api
+    Api --> Db
+    Api --> Redis
+    Api --> Storage
+    Api --> Worker
+    Worker --> Db
+    Worker --> Redis
+    Worker --> Storage
+    Worker --> External
+    Api --> External

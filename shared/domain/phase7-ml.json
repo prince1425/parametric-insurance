@@ -1,0 +1,37 @@
+{
+  "phase": {
+    "number": 7,
+    "name": "ML",
+    "status": "complete",
+    "next_phase": "Testing"
+  },
+  "model": {
+    "name": "risk_score_baseline",
+    "version_tag": "demo-v1.0.0",
+    "type": "deterministic_explainable_baseline",
+    "outputs": [
+      "risk_score",
+      "risk_band",
+      "loss_probability_pct",
+      "drought_probability_pct",
+      "flood_probability_pct",
+      "disease_probability_pct",
+      "payout_prediction_pct",
+      "explanation"
+    ]
+  },
+  "database_artifacts": [
+    "ml_feature_snapshots",
+    "ml_risk_scores",
+    "v_ml_risk_summary"
+  ],
+  "script": "ml/scripts/risk_scoring.py",
+  "acceptance_criteria": [
+    "ml_output_tables_exist",
+    "risk_scoring_script_exists",
+    "model_version_is_recorded",
+    "feature_snapshots_are_stored",
+    "risk_scores_are_explainable",
+    "risk_summary_view_exists"
+  ]
+}

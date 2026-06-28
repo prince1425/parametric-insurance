@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: agrishield-backend
+Version: 0.1.0
+Summary: FastAPI backend for the Agrishield parametric agricultural insurance platform.
+Requires-Python: >=3.11
+Requires-Dist: fastapi>=0.115.0
+Requires-Dist: uvicorn[standard]>=0.30.0
+Requires-Dist: sqlalchemy>=2.0.30
+Requires-Dist: psycopg[binary]>=3.2.0
+Requires-Dist: pydantic>=2.8.0
+Requires-Dist: email-validator>=2.2.0
+Requires-Dist: pydantic-settings>=2.4.0
+Requires-Dist: python-jose[cryptography]>=3.3.0
+Requires-Dist: passlib[bcrypt]>=1.7.4
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: httpx2>=0.28.0
+Requires-Dist: pytest>=8.3.0

@@ -1,0 +1,18 @@
+{
+  "model_name": "risk_score_baseline",
+  "version_tag": "demo-v1.0.0",
+  "auto_approval_confidence_threshold_pct": 85,
+  "weights": {
+    "ndvi_anomaly": 1.2,
+    "rainfall_anomaly": 0.35,
+    "confidence_gap": 0.45,
+    "review_flag": 8.0
+  },
+  "stress_weights": {
+    "no_stress": 0,
+    "mild": 8,
+    "moderate": 18,
+    "severe": 30,
+    "extreme": 42
+  }
+}
