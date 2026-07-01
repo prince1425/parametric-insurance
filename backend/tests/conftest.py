@@ -3,7 +3,7 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 
-os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://postgres@localhost:5432/agrishield")
+os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://postgres:1234@localhost:5432/agrishield")
 os.environ.setdefault("JWT_SECRET_KEY", "local-dev-secret-for-tests")
 os.environ.setdefault("DEMO_PASSWORD", "demo123")
 

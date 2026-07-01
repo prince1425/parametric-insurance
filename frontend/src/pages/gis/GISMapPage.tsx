@@ -45,20 +45,23 @@ export function GISMapPage() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <GeoJSON
-                key={JSON.stringify(data.features.map((feature) => feature.id))}
+                key={`geojson-${data.features.length}-${selected?.plot_code}`}
                 data={data}
                 style={(feature) => {
                   const band = String(feature?.properties?.stress_band ?? "no_stress");
+                  const isSelected = selected?.plot_code === feature?.properties?.plot_code;
                   return {
-                    color: bandColor[band] ?? "#71717a",
+                    color: isSelected ? "#18181b" : (bandColor[band] ?? "#71717a"),
                     fillColor: bandColor[band] ?? "#71717a",
-                    weight: 2,
-                    fillOpacity: 0.28,
+                    weight: isSelected ? 4 : 2,
+                    fillOpacity: isSelected ? 0.6 : 0.28,
                   };
                 }}
                 onEachFeature={(feature, layer: Layer) => {
                   layer.bindTooltip(String(feature.properties?.plot_code ?? "Plot"), { sticky: true });
-                  layer.on("click", () => setSelected(feature.properties ?? null));
+                  layer.on("click", () => {
+                    setSelected(feature.properties ?? null);
+                  });
                 }}
               />
             </MapContainer>

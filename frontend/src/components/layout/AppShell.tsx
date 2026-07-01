@@ -55,10 +55,10 @@ export function AppShell() {
             <p className="text-xs text-zinc-500">Demo portfolio connected to PostgreSQL</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="flex h-10 w-10 items-center justify-center rounded-enterprise border border-zinc-200 bg-white text-zinc-600 shadow-sm transition-all hover:border-zinc-300 hover:bg-zinc-50 hover:text-ink hover:shadow">
+            <button onClick={() => alert("Notifications panel coming soon")} className="flex h-10 w-10 items-center justify-center rounded-enterprise border border-zinc-200 bg-white text-zinc-600 shadow-sm transition-all hover:border-zinc-300 hover:bg-zinc-50 hover:text-ink hover:shadow">
               <Bell size={18} className="transition-transform hover:rotate-12" />
             </button>
-            <button className="hidden h-9 items-center gap-2 rounded-enterprise border border-zinc-200 bg-white px-3 text-sm text-zinc-700 sm:flex">
+            <button onClick={() => alert("Sentinel API simulation started...")} className="hidden h-9 items-center gap-2 rounded-enterprise border border-zinc-200 bg-white px-3 text-sm text-zinc-700 sm:flex">
               <Satellite size={16} />
               Sentinel mock
             </button>

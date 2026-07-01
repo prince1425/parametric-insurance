@@ -22,6 +22,18 @@ def create_app() -> FastAPI:
     )
     app.include_router(api_router, prefix=settings.api_prefix)
 
+    from sqlalchemy.exc import SQLAlchemyError
+    from fastapi import Request
+    from fastapi.responses import JSONResponse
+
+    @app.exception_handler(SQLAlchemyError)
+    async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -> JSONResponse:
+        # In a real production app, log the actual error securely here via a logger
+        return JSONResponse(
+            status_code=500,
+            content={"message": "An internal database error occurred. Please try again later."},
+        )
+
     @app.get("/health")
     def health() -> dict:
         return {"status": "ok", **healthcheck()}
