@@ -240,21 +240,5 @@ RAZORPAY_KEY_SECRET=your_live_razorpay_secret
 ### 4. Ingest Real Portfolio Data
 With the mock data removed and live APIs enabled, use the backend endpoints (e.g., `POST /api/v1/farmers` and `POST /api/v1/policies`) to securely ingest your actual farmer KYC data, GeoJSON farm boundaries, and insurance policies.
 
-## Comprehensive Project Review Report
 
-**Issues Found:**
-1. **Broken Test Environment:** Missing password (`1234`) in the test database connection string within `backend/tests/conftest.py`, leading to 500 Internal Server errors during `pytest` runs.
-2. **UI/UX Inconsistencies:** The GIS Map plot selection failed to visually highlight the selected polygon on the Leaflet map despite updating the detail side-panel state, resulting in a confusing UX.
-3. **Dead / Unimplemented UI Links:** The "Sentinel mock" and "Notifications" buttons in the AppShell header had no assigned actions or alerts, looking broken when clicked.
-4. **Error Handling/Masking (Code Smell):** The FastAPI global `SQLAlchemyError` handler masked all internal DB errors with a generic 500 response, lacking secure server-side logging for production traceability.
-
-**Fixes Applied:**
-- Re-configured `backend/tests/conftest.py` with the correct test database password to achieve passing `pytest` suites.
-- Updated the `GeoJSON` component in `frontend/src/pages/gis/GISMapPage.tsx` to include `selected?.plot_code` within its `key`, forcing a style re-render, and added explicit visual highlighting (border & fill opacity changes) for the active map selection.
-- Hooked up `onClick` alert placeholders to the unimplemented header buttons in `frontend/src/components/layout/AppShell.tsx` to communicate functionality state cleanly.
-
-**Remaining Recommendations:**
-- **Robust Error Logging:** Implement secure, persistent logging (e.g., using Python's `logging` module or integrating Sentry) inside the `sqlalchemy_exception_handler` within `backend/app/main.py`.
-- **Database Scaling:** Finalize TimescaleDB migrations for time-series handling if the daily weather observation volume scales significantly.
-- **Frontend Performance:** The `GeoJSON` re-rendering approach for Leaflet layer styling works perfectly for the current scale, but for >10,000 plots, `layer.setStyle` refs should be adopted directly to prevent layout thrashing upon selection change.
 
