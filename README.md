@@ -258,5 +258,3 @@ With the mock data removed and live APIs enabled, use the backend endpoints (e.g
 - **Database Scaling:** Finalize TimescaleDB migrations for time-series handling if the daily weather observation volume scales significantly.
 - **Frontend Performance:** The `GeoJSON` re-rendering approach for Leaflet layer styling works perfectly for the current scale, but for >10,000 plots, `layer.setStyle` refs should be adopted directly to prevent layout thrashing upon selection change.
 
-**Overall Project Readiness Score:** **92/100** 
-*(Highly stable for Demo/POC, nearing production readiness pending logging & final external API integrations).*
